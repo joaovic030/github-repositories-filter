@@ -37,3 +37,18 @@
     transform: translateY(0px)
   }
 }
+
+.menu-item {
+  padding: 0 40px;
+  margin: 5px 10px;
+  user-select: none;
+  cursor: pointer;
+  border: none;
+}
+.menu-item-wrapper {
+  margin: 2px;
+}
+.scroll-menu-arrow {
+  padding: 20px;
+  cursor: pointer;
+}
