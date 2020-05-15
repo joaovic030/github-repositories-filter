@@ -22,7 +22,7 @@ async function githubRequest() {
   try {
     return await axios.get(`https://api.github.com/repositories`, {
       headers: {
-        authorization: `token 8bb65004ce7686b620b9e6754564a5f7ed5a2bf2`
+        authorization: `token 77d2cc0aa8a039ecadcc2ee8afc22a7898d6f686`
       }
     });
   } catch (error) {
