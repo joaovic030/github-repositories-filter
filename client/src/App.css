@@ -38,7 +38,7 @@
   }
 }
 
-.menu-item {
+/* .menu-item {
   padding: 0 40px;
   margin: 5px 10px;
   user-select: none;
@@ -47,8 +47,8 @@
 }
 .menu-item-wrapper {
   margin: 2px;
-}
+} */
 .scroll-menu-arrow {
-  padding: 20px;
+  padding: 10px;
   cursor: pointer;
 }
