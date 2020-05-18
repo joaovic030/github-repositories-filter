@@ -11,11 +11,11 @@ function RepositoryList({repositories}) {
               return <Col lg="4" className="mb-2 mt-2">
                   <Card>
                     <Card.Header>
-                      <Row>
+                      <Row style={{alignItems: 'center'}}>
                         <Col lg="8">
                         <strong className="mr-auto">{repo.name}</strong></Col>
                         <Col lg="4">
-                          <Badge pill variant={bgOptions[Math.floor(Math.random() * bgOptions.length)]}> {repo.language} </Badge>
+                          <Badge pill variant={bgOptions[Math.floor(Math.random() * bgOptions.length)]} style={{float: 'right'}}> {repo.language} </Badge>
                         </Col>
                       </Row>
                     </Card.Header>

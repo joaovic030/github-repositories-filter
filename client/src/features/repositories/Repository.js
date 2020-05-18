@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
 import Container from 'react-bootstrap/Container';
-import { Col, Row, Badge } from 'react-bootstrap';
+import { Row, Badge } from 'react-bootstrap';
 import Menu from '../../components/horizontalScroll/Menu'
 import '../../App.css'
 
@@ -12,31 +11,35 @@ import RepositoryList from './RepositoryList';
 import Header from '../../components/Header/Index'
 
 
-const callApi = async () => {
-  const response = await fetch('http://localhost:4000/');
+const getRepositories = async () => {
+  const response = await fetch('http://localhost:4000/repositories');
   const body = await response.json();
   if (response.status !== 200) throw Error(body.message);
   
   return body;
 }
 
-const list = [
-  { name: 'item1' },
-  { name: 'item2' },
-  { name: 'item3' },
-  { name: 'item4' },
-  { name: 'item5' },
-  { name: 'item6' },
-  { name: 'item7' },
-  { name: 'item8' },
-  { name: 'item9' }
-];
+const getLanguages = async () => {
+  const response = await fetch('http://localhost:4000/languages');
+  const body = await response.json();
+  if (response.status !== 200) throw Error(body.message);
+  
+  return body;
+}
+
+const findRepositoriesByLang = async (lang) => {
+  const response = await fetch(`http://localhost:4000/repositories/${lang}`);
+  const body = await response.json();
+  if (response.status !== 200) throw Error(body.message);
+  
+  return body;
+}
  
 const Arrow = ({ text, className }) => {
   return (
     <div className={className}>
     <Badge variant='light' style={{borderRadius: 50}}>
-      <FontAwesomeIcon icon={ text == 'right' ? faChevronRight : faChevronLeft } />
+      <FontAwesomeIcon icon={ text === 'right' ? faChevronRight : faChevronLeft } />
     </Badge>
     </div>
   );
@@ -45,29 +48,70 @@ const Arrow = ({ text, className }) => {
 const ArrowLeft = Arrow({ text: 'left', className: 'arrow-prev' });
 const ArrowRight = Arrow({ text: 'right', className: 'arrow-next' });
  
-const active = 'item1';
 
 const Repository = () => {
+  
+  const active = "Todas";
+  const readAndSetRepositories = async () => {
+    try {
+      const response = await getRepositories()
+      setRepositories(response.repositories)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  const readAndSetLanguages = async () => {
+    try {
+      const response = await getLanguages()
+      let allOptionsLangs = response.languages
+      allOptionsLangs.unshift({"name": "Todas"})
+      setList(allOptionsLangs)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const findAndSetRepositories = async (lang) => {
+    try {
+      setInLoading(true)
+      const response = await findRepositoriesByLang(lang)
+      setRepositories(response.repositories)
+      setInLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const onSelect = key => {
     setSelected(key)
+    findAndSetRepositories(key)
   }
 
   const [repositories, setRepositories] = useState([])
+  // const [actualLanguage, setActualLanguage] = useState(active)
   const [selected, setSelected] = useState(active)
+  const [list, setList] = useState([])
   const [menuItems, setMenuItems] = useState(Menu(list, selected))
+  const [inLoading, setInLoading] = useState(false)
   
   useEffect(() => {
-    callApi().then(res => setRepositories(res.repositories)).catch(err => console.log(err))
+    readAndSetRepositories()
+    readAndSetLanguages()
   }, [])
 
   useEffect(() => {
     setMenuItems(Menu(list, selected))
-  }, [list])
+  }, [list, selected])
 
   let menu = menuItems
   
   const styles = {display: 'flex', justifyContent: 'center', alignItems: 'center', height: 400, backgroundColor: '#282c34', borderBottomLeftRadius: '50% 20%', borderBottomRightRadius: '50% 20%'}
+  const loading = () => {
+    return(
+      <div className='loader'>
+      </div>
+    )
+  }
   return (
     <>
       <Header />
@@ -82,6 +126,7 @@ const Repository = () => {
                 selected={selected}
                 onSelect={onSelect} />
         
+        {inLoading ? loading() : null}
         <RepositoryList repositories={repositories} />
         
       </Container>

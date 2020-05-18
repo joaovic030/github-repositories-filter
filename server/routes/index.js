@@ -1,22 +1,19 @@
 var express = require('express');
 var router = express.Router();
 const axios = require('axios');
+const github = require('../api/github')
 
-async function githubRequest(lang) {
+
+// let repos = []
+// githubRequest().then(response => { repos = response.data.items});
+
+router.get('/', async function(req, res, next) {
   try {
-    return await axios.get(`https://api.github.com/search/repositories?q=is:public`, {
-      headers: {
-      }
-    });
+    const repositories = await github.getRepositories()
+    res.send({ repositories: repositories.data.items })
   } catch (error) {
-    console.error(error)
+    console.log(error)
   }
-}
-let repos = []
-githubRequest().then(response => { repos = response.data.items});
-
-router.get('/', function(req, res, next) {
-  res.send({ repositories: repos })
 });
 
 module.exports = router;
