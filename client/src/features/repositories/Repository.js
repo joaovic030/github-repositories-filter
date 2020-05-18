@@ -151,13 +151,15 @@ const Repository = () => {
                 selected={selected}
                 onSelect={onSelect} />
 
-        <Pagination currentPage={0}
-          pageCount={50}
-          pageLinkClassName={pageLink}
-          currentLinkClassName={currentLink}
-          onPageClick={i => {
-            handlePageClick(i)
-          }} />
+        <div className='mt-2'>
+          <Pagination currentPage={0}
+            pageCount={50}
+            pageLinkClassName={pageLink}
+            currentLinkClassName={currentLink}
+            onPageClick={i => {
+              handlePageClick(i)
+            }} />
+        </div>
         
         {inLoading ? loading() : null}
         <RepositoryList repositories={repositories} />

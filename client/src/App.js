@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
 
-  
+  document.title = 'GithubFilter'
   return (
     <Repository />
   );
