@@ -9,7 +9,7 @@ const github = require('../api/github')
 
 router.get('/', async function(req, res, next) {
   try {
-    const repositories = await github.getRepositories()
+    const repositories = await github.getRepositories(req.query.page)
     res.send({ repositories: repositories.data.items })
   } catch (error) {
     console.log(error)

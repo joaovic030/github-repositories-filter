@@ -1,8 +1,8 @@
 const axios = require('axios');
 
-async function getRepositories() {
+async function getRepositories(page) {
   try {
-    return await axios.get(`https://api.github.com/search/repositories?q=is:public`, {
+    return await axios.get(`https://api.github.com/search/repositories?q=is:public&per_page=9&page=${page}`, {
       headers: {
       }
     });
@@ -41,4 +41,15 @@ async function findRepositoriesByLanguage(lang) {
   }
 }
 
-module.exports = { getRepositories, getLanguages, findRepositoriesByLanguage}
+async function findUserByUsername(username) {
+  try {
+    return await axios.get(`https://api.github.com/users/${username}`, {
+      headers: {
+      }
+    });
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+module.exports = { getRepositories, getLanguages, findRepositoriesByLanguage, findUserByUsername }

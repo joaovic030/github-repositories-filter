@@ -1,10 +1,11 @@
 import React from 'react'
 import Card from 'react-bootstrap/Card'
 import { Col, Row, Badge } from 'react-bootstrap';
+// import CenteredModal from './RepositoryShow'
 
 function RepositoryList({repositories}) {
   const bgOptions = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
-
+  // const [modalShow, setModalShow] = useState(false);
   return (
     <Row className="justify-content-md-center mt-4">
       {repositories.map(repo =>{
@@ -19,11 +20,11 @@ function RepositoryList({repositories}) {
                         </Col>
                       </Row>
                     </Card.Header>
-                    <Card.Body>{repo.description}</Card.Body>
+                    <Card.Body style={{cursor: 'pointer'}} onClick={() => window.open(repo.html_url, '_blank')}>{repo.description}</Card.Body>
                   </Card>
                 </Col>
         })}
-      </Row>
+    </Row>
   )
 }
 

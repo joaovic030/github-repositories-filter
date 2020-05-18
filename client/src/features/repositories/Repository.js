@@ -10,9 +10,12 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import RepositoryList from './RepositoryList';
 import Header from '../../components/Header/Index'
 
+import Pagination from 'pagination-component'
+import { css } from 'glamor'
 
-const getRepositories = async () => {
-  const response = await fetch('http://localhost:4000/repositories');
+
+const getRepositories = async (page) => {
+  const response = await fetch(`http://localhost:4000/repositories?page=${page}`);
   const body = await response.json();
   if (response.status !== 200) throw Error(body.message);
   
@@ -48,13 +51,30 @@ const Arrow = ({ text, className }) => {
 const ArrowLeft = Arrow({ text: 'left', className: 'arrow-prev' });
 const ArrowRight = Arrow({ text: 'right', className: 'arrow-next' });
  
+const pageLink = css({
+  margin: '2px',
+  display: 'inline-block',
+  padding: '2px',
+  WebkitBorderRadius: '20px',
+  MozBorderRadius: '20px',
+  borderRadius: '20px'
+})
+ 
+const currentLink = css({
+  backgroundColor: '#0074c2',
+  display: 'inline-block',
+  color: '#FFFFFF',
+  'a:link': { color: '#FFFFFF' },
+  'a:visited': { color: '#FFFFFF' },
+  'a:active': { color: '#FFFFFF' }
+})
 
 const Repository = () => {
   
   const active = "Todas";
-  const readAndSetRepositories = async () => {
+  const readAndSetRepositories = async (page) => {
     try {
-      const response = await getRepositories()
+      const response = await getRepositories(page)
       setRepositories(response.repositories)
     } catch (error) {
       console.log(error)
@@ -88,11 +108,11 @@ const Repository = () => {
   }
 
   const [repositories, setRepositories] = useState([])
-  // const [actualLanguage, setActualLanguage] = useState(active)
   const [selected, setSelected] = useState(active)
   const [list, setList] = useState([])
   const [menuItems, setMenuItems] = useState(Menu(list, selected))
   const [inLoading, setInLoading] = useState(false)
+  const [actualItems, setActualItems] = useState([])
   
   useEffect(() => {
     readAndSetRepositories()
@@ -112,6 +132,11 @@ const Repository = () => {
       </div>
     )
   }
+
+  function handlePageClick(page) {
+    readAndSetRepositories(page)
+  }
+
   return (
     <>
       <Header />
@@ -125,10 +150,17 @@ const Repository = () => {
         <ScrollMenu data={menu} arrowLeft={ArrowLeft} arrowRight={ArrowRight}
                 selected={selected}
                 onSelect={onSelect} />
+
+        <Pagination currentPage={0}
+          pageCount={50}
+          pageLinkClassName={pageLink}
+          currentLinkClassName={currentLink}
+          onPageClick={i => {
+            handlePageClick(i)
+          }} />
         
         {inLoading ? loading() : null}
         <RepositoryList repositories={repositories} />
-        
       </Container>
     </>
   )
